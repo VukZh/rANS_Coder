@@ -1,0 +1,25 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 16
+VisualStudioVersion = 16.0.29001.49
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "rANS_Coder", "rANS_Coder\rANS_Coder.csproj", "{864F6540-1D9A-4ACE-80D6-A4741E02E7E6}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{864F6540-1D9A-4ACE-80D6-A4741E02E7E6}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{864F6540-1D9A-4ACE-80D6-A4741E02E7E6}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{864F6540-1D9A-4ACE-80D6-A4741E02E7E6}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{864F6540-1D9A-4ACE-80D6-A4741E02E7E6}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {95A2B9AC-465D-40A0-BA61-1D4D02373DEB}
+	EndGlobalSection
+EndGlobal
