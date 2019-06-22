@@ -33,7 +33,8 @@ namespace rANS_Coder
 
         }
 
-        public void WriteFile(string FileName, string Extension, byte [] b_out) { // запись нового раскодированного файла
+        public void WriteFile(string FileName, string Extension, byte[] b_out)
+        { // запись нового раскодированного файла
             NewFileName = Path.ChangeExtension(FileName, Extension); // замена расширения на исходное, до кодировки
 
             try
@@ -94,16 +95,18 @@ namespace rANS_Coder
 
         }
 
-        public void AppToFile(UInt32[] UInt32_out) // дозапись массива чисел в закодированный файл
+        public void AppToFile(UInt16[] UInt16_out) // дозапись массива чисел (мл. разрадов состояния кодировщика) в закодированный файл
         {
 
             try
             {
                 using (BinaryWriter bw = new BinaryWriter(File.Open(NewFileName, FileMode.Append)))
                 {
-                    for (int i = 0; i < UInt32_out.Length; i++)
+                    for (int i = 0; i < UInt16_out.Length; i++)
                     {
-                        bw.Write(UInt32_out[i]);
+                        //bw.Write(UInt32_out[i]);
+                        bw.Write(UInt16_out[i]);
+                        //Console.WriteLine(i + " ---- " + (UInt16)UInt16_out[i]);
                     }
                 }
             }
@@ -114,6 +117,5 @@ namespace rANS_Coder
             }
 
         }
-
     }
 }

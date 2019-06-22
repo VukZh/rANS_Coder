@@ -34,7 +34,7 @@ namespace rANS_Coder
 
 
             var fileInfo = new FileInfo(FileName); // чтение параметров файла
-;
+            ;
             Extension = fileInfo.Extension; // определение расширения файла
 
             try
@@ -44,9 +44,7 @@ namespace rANS_Coder
 
                     bArray = new byte[fileInfo.Length]; // определение размера файла
                     bArray = br.ReadBytes((int)br.BaseStream.Length); // чтение в битовый массив всего файла
-
-                    Console.WriteLine("> Extension " + fileInfo.Extension + " " + fileInfo.Extension.Length);
-
+                    
                     if (fileInfo.Extension == ".rns") // выставление флага архива
                     {
                         FlagRNS = true;

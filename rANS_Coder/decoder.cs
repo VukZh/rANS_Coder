@@ -6,20 +6,21 @@ namespace rANS_Coder
     class Decoder
     {
 
-        Stack<UInt32> Xarr = new Stack<uint>();
+        //Stack<UInt32> XarrXXXXXX = new Stack<uint>();
         UInt32 NormalizeNum;
         byte POW;
         UInt32[] Bs;
         UInt32[] Fs;
         UInt32 F_All;
         UInt32 Range;
+        UInt32 X; // текущее состояние декодировки
 
-        UInt32 [] X;
+        UInt16[] Xarr; // массив состояний кодировки - для прохода по нему при декодировке
 
         byte[] BtoS;
         byte[] PackTable;
 
-        Queue <byte> OutB;
+        Queue<byte> OutB;
 
         public Decoder(byte[] btos, byte[] packtable, byte pow)
         {
@@ -32,23 +33,26 @@ namespace rANS_Coder
 
             Fs = new UInt32[256];
             Bs = new UInt32[257];
-            OutB = new Queue <byte>();
+            OutB = new Queue<byte>();
 
-            X = new UInt32[PackTable.Length/4]; // восстановление состояний X кодировки из byte по 4 байта в UInt32 - для дальнейшего декодирования
+            //Console.WriteLine("packtable size " + PackTable.Length);
+
+            Xarr = new UInt16[PackTable.Length / 2]; // восстановление состояний X кодировки из byte по 2 байта в UInt16 - для дальнейшего декодирования //////////
             CalcX();
             CalcFsBs();
 
         }
 
-        public void CalcX() {
+        public void CalcX()
+        {
             int CountX = 0;
-            for (int i = 0; i < PackTable.Length; i = i + 4)
+            for (int i = 0; i < PackTable.Length; i = i + 2)
             {
 
                 //Console.WriteLine("i " + i + " CountX " + CountX);
-                byte[] Temp4byte = new byte[4];
-                Array.Copy(PackTable, i, Temp4byte, 0, 4);
-                X[CountX] = BitConverter.ToUInt32(Temp4byte, 0);
+                byte[] Temp4byte = new byte[2];
+                Array.Copy(PackTable, i, Temp4byte, 0, 2);
+                Xarr[CountX] = BitConverter.ToUInt16(Temp4byte, 0);
                 CountX++;
             }
 
@@ -58,42 +62,36 @@ namespace rANS_Coder
             //}
         }
 
-        public byte [] GetS() // восстановление байт на основе состояния кодировщика X
+
+        public byte[] GetS() // восстановление байт на основе состояния кодировщика X
         {
 
-            UInt32 XSize= (UInt32) X.Length;
+            UInt32 XSize = (UInt32)Xarr.Length;           
 
-            UInt32 XN = X [XSize - 1];
-            //Console.WriteLine("X [0]" + XN);
+            UInt32 XN = Xarr[XSize - 1];
 
-
-            int i = (int) XSize - 2;
+            int i = (int)XSize - 2;
 
             while (XN != 77777 || i > 0)
             {
-                //Console.WriteLine("XN..." + XN);
-                OutB.Enqueue (DecodeS(XN));  // восстановленный очередной байт
-                XN = NextX(XN); // следующее состояние X
 
-                if (XN < Range)
+                if (XN < Range) // renorm
                 {
-                    //Console.WriteLine("renorm...");
-                    
-                    XN = X[i];
+                    XN = XN << 16;
+                    XN = XN + Xarr[i];
                     i--;
 
-                    //if ((XSize - i) % 1000 == 0) {
-                    //    Console.WriteLine(" decode " + (XSize - i) + " from " + XSize);
-                    //}
-
+                    if ((XSize - i) % 1000 == 0)
+                    {
+                        Console.WriteLine(" decode " + (XSize - i) + " from " + XSize);
+                    }
 
                 }
-            }
 
-            //if (XN == 77777)
-            //{
-            //    Console.WriteLine("OOOPS..." + i);
-            //}
+                OutB.Enqueue(DecodeS(XN));
+                XN = NextX(XN);
+
+            }
 
             Console.WriteLine("decode OK");
             return OutB.ToArray();

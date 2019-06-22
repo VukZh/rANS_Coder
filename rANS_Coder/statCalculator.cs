@@ -173,7 +173,7 @@ namespace rANS_Coder
                     statF_Element[i] = 1;
                     throw new ArgumentException("size table small !!! " + i);
                 }
-                               
+
             }
             Console.WriteLine("normalize OK");
         }

@@ -13,7 +13,7 @@ namespace rANS_Coder
         UInt32 NormalizeNum; // число для определения что требуется нормализация X
         UInt32 FAll; // размер таблицы для декодирования
         UInt32 X; // состояние кодировщика
-        Queue<UInt32> Xarr; // очередь для записи состояний кодировщика
+        Queue<UInt16> Xarr; // очередь для записи состояний кодировщика
 
         public Encoder(byte[] bcache, byte pow, UInt32 x) // запуск кодирования RANS; bcache - исходный массив байт; pow - степень для кодирования и для генерации таблицы для декодирования; x - инициализация начального состояния кодировщика (> 65536)
         {
@@ -26,22 +26,22 @@ namespace rANS_Coder
             NormalizeNum = 1u << 16;
             FAll = 1u << pow;
             X = x;
-            Xarr = new Queue<UInt32>();
+            Xarr = new Queue<UInt16>();
 
 
         }
 
-        public UInt32[] GetX()
+        public UInt16[] GetX()
         { // кодирование - побайтно рассчитываем состояние X кодировщика и заносим состояние в случае нормализации в стэк, стэк выводим в массив для записи в дальнейшем в файл
             int BCacheSize = BCache.Length;
             for (int i = 0; i < BCacheSize; i++)
             {
                 Encode(BCache[i]);
 
-                //if (i % 1000 == 0)
-                //{
-                //    Console.WriteLine(" encode " + i + " from " + BCacheSize);
-                //}
+                if (i % 1000 == 0)
+                {
+                    Console.WriteLine(" encode " + i + " from " + BCacheSize);
+                }
 
             }
             Console.WriteLine("encode OK");
@@ -100,16 +100,16 @@ namespace rANS_Coder
 
             if ((X >> 16) >= (NormalizeNum >> POW) * Fs[s]) // нормализация состояния кодировщика и его запись в очередь
             {
-                
-                //Console.WriteLine("X >> 16 " + X + " " + " NormalizeNum >> POW " + (NormalizeNum >> POW) + " " + " X " + X);
-                Xarr.Enqueue(X);
-                X >>= 16;
-                
+
+                //Console.WriteLine("X >> 16 " + X + " " + " NormalizeNum >> POW " + (NormalizeNum >> POW) + " " + " X " + X + " xSmall " + (UInt16)X);
+                Xarr.Enqueue((UInt16)X); // сохраняем 16 мл. разрядов состояния
+                X >>= 16; // сдвигаем состояние 16 ст. разрядов на место мл. разрядов
+
             }
 
 
 
-            X = ((X / Fs[s] << POW) + Bs[s] + (X % Fs[s])); // рассчет нового состояния кодировщика
+            X = ((X / Fs[s] << POW) + Bs[s] + (X % Fs[s])); // рассчет нового состояния кодировщика в зависимости от старого состояния и нового поступившего байта
 
             if (X < NormalizeNum) throw new ArgumentException("error normalize X");
 
@@ -123,11 +123,13 @@ namespace rANS_Coder
                 //Console.WriteLine((X >> 16) + " >= " + (NormalizeNum >> POW) * Fs[s] + " NormalizeNum " + NormalizeNum + " Fs[s] " + Fs[s]);
 
 
+                //Console.WriteLine(" X " + X + " xSmall " + (UInt16)X);
+                Xarr.Enqueue((UInt16)X);
 
-                Xarr.Enqueue(X);
+                X >>= 16;
+                //Console.WriteLine(" X- " + X + " xSmall- " + (UInt16)X);
+                Xarr.Enqueue((UInt16)X);
 
-
-                
             }
 
         }
