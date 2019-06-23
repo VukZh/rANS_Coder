@@ -12,10 +12,7 @@ namespace rANS_Coder
 
         byte[] bArray;
         bool flagRNS = false; // флаг архива *.rns
-
         string Extension; // расширение
-
-
 
         public bool FlagRNS { get => flagRNS; set => flagRNS = value; }
 
@@ -24,7 +21,6 @@ namespace rANS_Coder
 
             Extension = Extension.Substring(1, Extension.Length - 1);
             byte[] res = Encoding.ASCII.GetBytes(Extension);
-
             return res;
         }
 
@@ -34,28 +30,23 @@ namespace rANS_Coder
 
 
             var fileInfo = new FileInfo(FileName); // чтение параметров файла
-            ;
             Extension = fileInfo.Extension; // определение расширения файла
 
             try
             {
                 using (BinaryReader br = new BinaryReader(File.Open(FileName, FileMode.Open)))
                 {
-
                     bArray = new byte[fileInfo.Length]; // определение размера файла
                     bArray = br.ReadBytes((int)br.BaseStream.Length); // чтение в битовый массив всего файла
-                    
+
                     if (fileInfo.Extension == ".rns") // выставление флага архива
                     {
                         FlagRNS = true;
                     }
-
                 }
-
             }
             catch (Exception e)
             {
-
                 Console.WriteLine("ERROR READ " + e.Message);
             }
             return bArray;

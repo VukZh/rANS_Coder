@@ -12,13 +12,10 @@ namespace rANS_Coder
             string fileName; // имя файла
             byte pow;  // степень размера для таблицы кодирования
 
-
             if (args.Length == 0) // нет параметров командной строки
             {
                 throw new ArgumentNullException("argument out");
             }
-
-
 
             else if (args.Length == 1) // 1 параметр командной строки
             {
@@ -51,35 +48,26 @@ namespace rANS_Coder
 
 
             if (!breader.FlagRNS)
-            { // кодирование
+            { // кодирование, т.к. это не архив
                 BinWriter bw = new BinWriter(); // подготовка записи закодированного файла
                 byte[] ext = breader.GetExtension(); // берем расширение для сохранения внутри файла
-                                                     //Console.WriteLine(ext.Length);
-                Array.Reverse(bcache); // для кодирование разворачиваем исходный массив байт
-                bw.WriteFile(fileName, (byte)ext.Length); // 1 - записываем размер расширения
+
+                Array.Reverse(bcache); // для кодирования разворачиваем исходный массив байт (LIFO)
+                bw.WriteFile(fileName, (byte)ext.Length); // 1 - записываем размер расширения в файл архива
                 bw.AppToFile(ext); // 2 - записываем расширение
                 bw.AppToFile(pow); // 3 - записываем степень
 
                 Encoder enc = new Encoder(bcache, pow, 77777); // подготовка кодирования массива bcache со степенью pow с начальной инициализацией кодировщика (77777) - также проверяется на это число в раскодировке
 
-                byte[] TableFtoS = enc.CalcTabFtoS(); // рассчет таблицы для вычисления байт при дальнейшей раскодировке
-                                                      //Console.WriteLine("TableFtoS " + TableFtoS.Length);
-
-
+                byte[] TableFtoS = enc.CalcTabFtoS(); // рассчет таблицы для вычисления байт при дальнейшей раскодировке размером 2^pow
 
                 bw.AppToFile(TableFtoS); // 4 - записываем рассчитанную на предыдущем шаге таблицу
 
-
-
                 UInt16[] xArray = enc.GetX(); // получаем массив чисел - состояние кодировщика
 
-
                 bw.AppToFile(xArray); // 5 - записываем состояние кодировщика
-
-
-
             }
-            else // декодирование
+            else // декодирование, т.к. это архив
             {
 
                 byte[] ext = new byte[bcache[0]]; // читаем исходное расширение
@@ -87,19 +75,18 @@ namespace rANS_Coder
                 {
                     ext[i] = bcache[i + 1];
                 }
+
                 string ExtensionOrigFile = Encoding.ASCII.GetString(ext);
                 UInt32 powInd = (UInt32)ext.Length + 1;  // место pow в запакованном файле
                 pow = bcache[powInd]; // читаем POW
 
-                UInt32 SizeTable = 1u << pow;
-
+                UInt32 SizeTable = 1u << pow; // размер таблицы для вычисления байт при раскодировке размером 2^pow
 
                 byte[] TableFtoS = new byte[SizeTable]; // читаем таблицу для декодирования размером 2 в степени pow
                 Array.Copy(bcache, powInd + 1, TableFtoS, 0, SizeTable);
 
-
                 UInt32 PackTableInd = powInd + 1 + SizeTable; // место начала закодированных данных в запакованном файле
-                UInt32 PackTableSize = (UInt32)bcache.Length - PackTableInd;
+                UInt32 PackTableSize = (UInt32)bcache.Length - PackTableInd; // размер закодированных данных в запакованном файле
                 byte[] PackTable = new byte[PackTableSize]; // читаем упакованные данные для распаковки и записи в дальнейшем в распакованный файл
 
                 Array.Copy(bcache, PackTableInd, PackTable, 0, PackTableSize);
@@ -110,14 +97,8 @@ namespace rANS_Coder
 
                 BinWriter bw = new BinWriter(); // подготовка записи раскодированного файла
                 bw.WriteFile(fileName, ExtensionOrigFile, OUT);
-
             }
-
-
         }
-
-
-
     }
 }
 

@@ -5,29 +5,21 @@ namespace rANS_Coder
 {
     class BinWriter
     {
-
         string NewFileName; // новое имя на основе параметра FileName
-
-
         public void WriteFile(string FileName, byte b_out) // запись нового закодированного файла FileName.rns с 1 байтом (размер расширения исходного файла)
         {
 
             NewFileName = Path.ChangeExtension(FileName, "rns"); // замена расширения
-
             try
             {
                 using (BinaryWriter bw = new BinaryWriter(File.Open(NewFileName, FileMode.Create)))
                 {
-                    //for (int i = 0; i < b_out.Length; i++)
-                    //{
                     bw.Write(b_out);
-                    //}
                 }
 
             }
             catch (Exception e)
             {
-
                 Console.WriteLine("ERROR WRITE " + e.Message);
             }
 
@@ -41,16 +33,12 @@ namespace rANS_Coder
             {
                 using (BinaryWriter bw = new BinaryWriter(File.Open(NewFileName, FileMode.Create)))
                 {
-                    //for (int i = 0; i < b_out.Length; i++)
-                    //{
                     bw.Write(b_out);
-                    //}
                 }
 
             }
             catch (Exception e)
             {
-
                 Console.WriteLine("ERROR WRITE " + e.Message);
             }
         }
@@ -70,7 +58,6 @@ namespace rANS_Coder
             }
             catch (Exception e)
             {
-
                 Console.WriteLine("ERROR APPEND " + e.Message);
             }
 
@@ -83,19 +70,17 @@ namespace rANS_Coder
             {
                 using (BinaryWriter bw = new BinaryWriter(File.Open(NewFileName, FileMode.Append)))
                 {
-
                     bw.Write(b_out);
                 }
             }
             catch (Exception e)
             {
-
                 Console.WriteLine("ERROR APPEND " + e.Message);
             }
 
         }
 
-        public void AppToFile(UInt16[] UInt16_out) // дозапись массива чисел (мл. разрадов состояния кодировщика) в закодированный файл
+        public void AppToFile(UInt16[] UInt16_out) // дозапись массива чисел (мл. разрядов состояния кодировщика) в закодированный файл
         {
 
             try
@@ -112,7 +97,6 @@ namespace rANS_Coder
             }
             catch (Exception e)
             {
-
                 Console.WriteLine("ERROR APPEND " + e.Message);
             }
 
