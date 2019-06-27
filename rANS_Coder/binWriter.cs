@@ -3,10 +3,10 @@ using System.IO;
 
 namespace rANS_Coder
 {
-    class BinWriter
+    class BinWriter : IWriter
     {
         string NewFileName; // новое имя на основе параметра FileName
-        public void WriteFile(string FileName, byte b_out) // запись нового закодированного файла FileName.rns с 1 байтом (размер расширения исходного файла)
+        public void WriteFile(string FileName, byte byte_out) // запись нового закодированного файла FileName.rns с 1 байтом (размер расширения исходного файла)
         {
 
             NewFileName = Path.ChangeExtension(FileName, "rns"); // замена расширения
@@ -14,18 +14,19 @@ namespace rANS_Coder
             {
                 using (BinaryWriter bw = new BinaryWriter(File.Open(NewFileName, FileMode.Create)))
                 {
-                    bw.Write(b_out);
+                    bw.Write(byte_out);
                 }
 
             }
-            catch (Exception e)
+            catch (IOException)
             {
-                Console.WriteLine("ERROR WRITE " + e.Message);
+                Console.WriteLine("ERROR WRITE RNS FILE");
+                Environment.Exit(0);
             }
 
         }
 
-        public void WriteFile(string FileName, string Extension, byte[] b_out)
+        public void WriteFile(string FileName, string Extension, byte[] byte_out)
         { // запись нового раскодированного файла
             NewFileName = Path.ChangeExtension(FileName, Extension); // замена расширения на исходное, до кодировки
 
@@ -33,54 +34,57 @@ namespace rANS_Coder
             {
                 using (BinaryWriter bw = new BinaryWriter(File.Open(NewFileName, FileMode.Create)))
                 {
-                    bw.Write(b_out);
+                    bw.Write(byte_out);
                 }
 
             }
-            catch (Exception e)
+            catch (IOException)
             {
-                Console.WriteLine("ERROR WRITE " + e.Message);
+                Console.WriteLine("ERROR WRITE FILE");
+                Environment.Exit(0);
             }
         }
 
-        public void AppToFile(byte[] b_out) // дозапись закодированного файла
+        public void ContinueWriteToFile(byte[] byte_out) // дозапись закодированного файла
         { // дозапись массива байт
 
             try
             {
                 using (BinaryWriter bw = new BinaryWriter(File.Open(NewFileName, FileMode.Append)))
                 {
-                    for (int i = 0; i < b_out.Length; i++)
+                    for (int i = 0; i < byte_out.Length; i++)
                     {
-                        bw.Write(b_out[i]);
+                        bw.Write(byte_out[i]);
                     }
                 }
             }
-            catch (Exception e)
+            catch (IOException)
             {
-                Console.WriteLine("ERROR APPEND " + e.Message);
+                Console.WriteLine("ERROR WRITE ARRAY BYTE TO FILE");
+                Environment.Exit(0);
             }
 
         }
 
-        public void AppToFile(byte b_out) // дозапись байта в закодированный файл
+        public void ContinueWriteToFile(byte byte_out) // дозапись байта в закодированный файл
         {
 
             try
             {
                 using (BinaryWriter bw = new BinaryWriter(File.Open(NewFileName, FileMode.Append)))
                 {
-                    bw.Write(b_out);
+                    bw.Write(byte_out);
                 }
             }
-            catch (Exception e)
+            catch (IOException)
             {
-                Console.WriteLine("ERROR APPEND " + e.Message);
+                Console.WriteLine("ERROR WRITE BYTE TO FILE");
+                Environment.Exit(0);
             }
 
         }
 
-        public void AppToFile(UInt16[] UInt16_out) // дозапись массива чисел (мл. разрядов состояния кодировщика) в закодированный файл
+        public void ContinueWriteToFile(UInt16[] UInt16_out) // дозапись массива чисел (мл. разрядов состояния кодировщика) в закодированный файл
         {
 
             try
@@ -95,9 +99,10 @@ namespace rANS_Coder
                     }
                 }
             }
-            catch (Exception e)
+            catch (IOException)
             {
-                Console.WriteLine("ERROR APPEND " + e.Message);
+                Console.WriteLine("ERROR WRITE ARCHIVE TO FILE");
+                Environment.Exit(0);
             }
 
         }

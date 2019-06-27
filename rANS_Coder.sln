@@ -5,6 +5,8 @@ VisualStudioVersion = 16.0.29001.49
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "rANS_Coder", "rANS_Coder\rANS_Coder.csproj", "{864F6540-1D9A-4ACE-80D6-A4741E02E7E6}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RANS_encoder_decoder", "RANS_encoder_decoder\RANS_encoder_decoder.csproj", "{605503A9-8F83-41D7-BE2E-6F74C8290BF8}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -15,6 +17,10 @@ Global
 		{864F6540-1D9A-4ACE-80D6-A4741E02E7E6}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{864F6540-1D9A-4ACE-80D6-A4741E02E7E6}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{864F6540-1D9A-4ACE-80D6-A4741E02E7E6}.Release|Any CPU.Build.0 = Release|Any CPU
+		{605503A9-8F83-41D7-BE2E-6F74C8290BF8}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{605503A9-8F83-41D7-BE2E-6F74C8290BF8}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{605503A9-8F83-41D7-BE2E-6F74C8290BF8}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{605503A9-8F83-41D7-BE2E-6F74C8290BF8}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

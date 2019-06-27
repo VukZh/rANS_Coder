@@ -60,11 +60,11 @@
   <ItemGroup>
     <Compile Include="binReader.cs" />
     <Compile Include="binWriter.cs" />
-    <Compile Include="decoder.cs" />
-    <Compile Include="encoder.cs" />
+    <Compile Include="IReader.cs" />
+    <Compile Include="IWriter.cs" />
+    <Compile Include="MainSolution.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="statCalculator.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />
@@ -80,6 +80,12 @@
       <ProductName>.NET Framework 3.5 SP1</ProductName>
       <Install>false</Install>
     </BootstrapperPackage>
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\RANS_encoder_decoder\RANS_encoder_decoder.csproj">
+      <Project>{605503a9-8f83-41d7-be2e-6f74c8290bf8}</Project>
+      <Name>RANS_encoder_decoder</Name>
+    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

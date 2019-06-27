@@ -1,55 +1,54 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.IO;
-using System.Linq;
 using System.Text;
-using System.Threading.Tasks;
 
 namespace rANS_Coder
 {
-    class BinReader
+    class BinReader : IReader
     {
 
-        byte[] bArray;
         bool flagRNS = false; // флаг архива *.rns
         string Extension; // расширение
+        byte[] ExtensionToByte; //расширение как массив байт для записи в бинарный файл
 
         public bool FlagRNS { get => flagRNS; set => flagRNS = value; }
-
-        public byte[] GetExtension()
-        { // получение расширения как массива байт
-
-            Extension = Extension.Substring(1, Extension.Length - 1);
-            byte[] res = Encoding.ASCII.GetBytes(Extension);
-            return res;
-        }
-
-
+        public byte[] GetExtension { get => ExtensionToByte; }
         public byte[] ReadFile(string FileName) // чтение файла
         {
 
-
-            var fileInfo = new FileInfo(FileName); // чтение параметров файла
-            Extension = fileInfo.Extension; // определение расширения файла
-
             try
             {
+
+                var fileInfo = new FileInfo(FileName); // чтение параметров файла
+                byte[] byteArray = new byte[fileInfo.Length]; // определение размера файла
+                Extension = fileInfo.Extension; // определение расширения файла
+                Extension = Extension.Substring(1, Extension.Length - 1); // убираем точку в расширении
+                ExtensionToByte = Encoding.ASCII.GetBytes(Extension);
+
                 using (BinaryReader br = new BinaryReader(File.Open(FileName, FileMode.Open)))
                 {
-                    bArray = new byte[fileInfo.Length]; // определение размера файла
-                    bArray = br.ReadBytes((int)br.BaseStream.Length); // чтение в битовый массив всего файла
+
+                    byteArray = br.ReadBytes((int)br.BaseStream.Length); // чтение в битовый массив всего файла
 
                     if (fileInfo.Extension == ".rns") // выставление флага архива
                     {
                         FlagRNS = true;
-                    }
+                    }                    
                 }
+                return byteArray;
             }
-            catch (Exception e)
+            catch (FileNotFoundException)
             {
-                Console.WriteLine("ERROR READ " + e.Message);
+                Console.WriteLine("FILE NOT FOUND");
+                Environment.Exit(0);
             }
-            return bArray;
+            catch (IOException)
+            {
+                Console.WriteLine("ERROR READ FILE");
+                Environment.Exit(0);
+            }
+
+            return null;
         }
     }
 
